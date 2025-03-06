@@ -2,8 +2,8 @@
   <div class="grid-item">
     <h2>🏆 最受欢迎作者</h2>
     <ul>
-      <li v-for="(author, index) in authors" :key="index">
-        {{ index + 1 }}. {{ author.name }} - 借阅 {{ author.borrowCount }} 次
+      <li v-for="(author, index) in authors.slice(0, 3)" :key="index">
+        <strong>{{ index + 1 }}. {{ author.name }}</strong> - 借阅 <span class="read-count">{{ author.totalReadCount }}</span> 次
       </li>
     </ul>
   </div>
@@ -29,3 +29,10 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.read-count {
+  color: #ff6347;
+  font-weight: bold;
+}
+</style>
