@@ -1,5 +1,5 @@
 <div align="center">
-  English | <a href="./README_zh-CN.md">中文</a>
+  English | <a href="docs/README_zh-CN.md">中文</a>
 </div>
 
 # Project Overview
