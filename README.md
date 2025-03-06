@@ -32,7 +32,7 @@ This project is a book management system with the following main features:
 
 1. Clone the project to your local machine:
    ```bash
-   git clone <project-url>
+   git clone https://github.com/rh666666/pro666
    ```
 
 2. Install dependencies:

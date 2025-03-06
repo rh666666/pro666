@@ -32,7 +32,7 @@
 
 1. 克隆项目到本地：
    ```bash
-   git clone <项目地址>
+   git clone https://github.com/rh666666/pro666
    ```
 
 2. 安装依赖：
