@@ -6,16 +6,23 @@ const totalUsers = Mock.mock('@natural(1000, 5000)');
 
 // 生成图书数据
 const booksData = Mock.mock({
-  "books|1000-5000": [
+  "books|10000-50000": [
     {
       "id|+1": 1,
       "title": "@ctitle(5, 10)",
       "author": "@cname",
       "publishYear|1900-2023": 1,
-      "readCount": () => Math.max(Math.floor(Math.random() * totalUsers) - Math.round(0.2 * totalUsers), 0)
+      "readCount": () => Math.max(Math.floor(Math.random() * totalUsers * 3) - Math.round(0.2 * totalUsers), 0)
     }
   ]
 }).books;
+
+// 模拟仪表盘数据接口
+Mock.mock('/api/dashboard', 'get', () => {
+  const totalBooks = booksData.length;
+  const todayBorrows = Mock.mock('@natural(100, 500)');
+  return { totalBooks, totalUsers, todayBorrows };
+});
 
 // 确保最新借阅的图书的阅读量不为0
 booksData.forEach(book => {
@@ -50,13 +57,6 @@ Mock.mock('/api/top-authors', 'get', () => {
     .sort((a, b) => b.totalReadCount - a.totalReadCount)
     .slice(0, 3);
   return topAuthors;
-});
-
-// 模拟仪表盘数据接口
-Mock.mock('/api/dashboard', 'get', () => {
-  const totalBooks = booksData.length;
-  const todayBorrows = Mock.mock('@natural(100, 500)');
-  return { totalBooks, totalUsers, todayBorrows };
 });
 
 // 模拟最新借阅图书接口
