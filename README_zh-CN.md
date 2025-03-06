@@ -1,3 +1,7 @@
+<div align="center">
+  <a href="./README.md">English</a> | 中文
+</div>
+
 # 项目简介
 
 本项目是一个图书管理系统，包含以下主要功能：
