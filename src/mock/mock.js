@@ -15,4 +15,3 @@ Mock.mock('/api/books', 'get', (req, res) => {
       ]
     };
   });
-  
