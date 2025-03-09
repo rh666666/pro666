@@ -1,5 +1,5 @@
 <div align="center">
-  [en](../README.md) | 中文
+  <a href="../README.md">en</a> | 中文
 </div>
 
 # 图书管理系统项目文档
