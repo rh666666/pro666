@@ -26,4 +26,27 @@
     }
   };
   </script>
+
+  <style scoped>
+  .grid-item {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s ease-in-out;
+  }
   
+  h2 {
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  </style>

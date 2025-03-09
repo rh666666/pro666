@@ -40,7 +40,7 @@ Mock.mock('/api/books', 'get', () => {
 Mock.mock('/api/popular-books', 'get', () => {
   const popularBooks = booksData
     .sort((a, b) => b.readCount - a.readCount)
-    .slice(0, 3);
+    .slice(0, 10); // 返回10个结果
   return popularBooks;
 });
 
@@ -55,12 +55,20 @@ Mock.mock('/api/top-authors', 'get', () => {
   });
   const topAuthors = Object.values(authorMap)
     .sort((a, b) => b.totalReadCount - a.totalReadCount)
-    .slice(0, 3);
+    .slice(0, 10); // 返回10个结果
   return topAuthors;
 });
 
 // 模拟最新借阅图书接口
 Mock.mock('/api/latest-borrowed-books', 'get', () => {
+  const latestBorrowedBooks = booksData
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 10);
+  return latestBorrowedBooks;
+});
+
+// 模拟实时借阅信息接口
+Mock.mock('/api/live-borrow', 'get', () => {
   const latestBorrowedBooks = booksData
     .sort(() => Math.random() - 0.5)
     .slice(0, 10);

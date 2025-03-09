@@ -36,7 +36,36 @@ export default {
   color: #ff6347;
   font-weight: bold;
 }
+
 h2 {
-  color: #2c3e50;
+  font-size: 1.5em;
+  margin-bottom: 0.5em;
+  animation: fadeIn 1s ease-in-out;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  background: #f9f9f9;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+li:hover {
+  background: #e9e9e9;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 </style>
