@@ -1,5 +1,5 @@
 <div align="center">
-  en | [中文](docs/README_zh-CN.md)
+  en | <a href="docs/README_zh-CN.md">中文</a>
 </div>
 
 # Book Management System
