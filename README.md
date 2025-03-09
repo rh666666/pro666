@@ -1,3 +1,7 @@
+<div align="center">
+  en | [中文](docs/README_zh-CN.md)
+</div>
+
 # Book Management System
 
 ## 1. Introduction
@@ -135,4 +139,4 @@ We welcome contributions from the community! If you want to contribute to this p
 This project is licensed under the MIT License. You can find the full text of the license in the `LICENSE` file (if available) or at [https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT).
 
 ## 9. Contact
-If you have any questions or suggestions about this project, please feel free to open an issue on the GitHub repository. 
+If you have any questions or suggestions about this project, please feel free to open an issue on the GitHub repository.

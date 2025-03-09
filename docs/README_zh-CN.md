@@ -1,3 +1,7 @@
+<div align="center">
+  [en](../README.md) | 中文
+</div>
+
 # 图书管理系统项目文档
 
 ## 一、项目概述
@@ -146,4 +150,4 @@ export default {
 本项目采用 MIT 许可证，你可以在 `LICENSE` 文件中查看完整的许可证信息。
 
 ## 八、联系我们
-如果你对项目有任何疑问或建议，请在 GitHub 仓库中提交 Issue。 
+如果你对项目有任何疑问或建议，请在 GitHub 仓库中提交 Issue。
