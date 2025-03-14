@@ -1,4 +1,4 @@
-import { createApp } from 'vue';
+import { createApp, nextTick } from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -15,3 +15,10 @@ app.use(store);
 app.use(ElementPlus);
 
 app.mount('#app');
+
+nextTick(() => {
+  const chartContainer = document.querySelector('.chart-container');
+  if (chartContainer) {
+    // 初始化图表容器的逻辑
+  }
+});
