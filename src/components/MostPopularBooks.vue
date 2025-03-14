@@ -1,12 +1,12 @@
 <template>
   <div class="grid-item">
     <h2 class="section-title">📚 图书借阅排行</h2>
-    <echarts 
-      :option="chartOption" 
-      autoresize 
-      class="chart-container"
-      ref="chartContainer"
-    />
+    <div class="chart-container" ref="chartContainer">
+      <echarts 
+        :option="chartOption" 
+        autoresize
+      />
+    </div>
   </div>
 </template>
 
@@ -47,11 +47,12 @@ const chartContainer = ref(null);
 
 onMounted(() => {
   nextTick(() => {
-    chartInstance.value = echarts.init(chartContainer.value);
+    chartInstance.value = echarts.init(chartContainer.value, null, {
+      renderer: 'canvas'
+    });
     chartInstance.value.setOption(chartOption.value);
   });
 });
-
 
 onBeforeUnmount(() => {
   if(chartInstance.value) {
@@ -59,6 +60,8 @@ onBeforeUnmount(() => {
   }
 });
 </script>
+
+<style scoped>
 .read-count {
   color: var(--danger-color);
   font-weight: bold;

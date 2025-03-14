@@ -10,7 +10,7 @@
           placement="top"
         >
           <el-tag effect="dark" type="success">NEW</el-tag>
-          {{ record.user }} 借阅了《{{ record.book }}》
+          {{ record.user }} 于 {{ record.borrowTime }} 借阅了《{{ record.book }}》，应于 {{ record.returnTime }} 归还
         </el-timeline-item>
       </el-timeline>
     </el-scrollbar>
@@ -18,22 +18,22 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { ElMessage } from 'element-plus';
-import { fetchLatestBorrows } from '../api/dashboard';
-import dayjs from 'dayjs'; // 确保引入 dayjs
+import { ref } from "vue";
+import { ElMessage } from "element-plus";
+import { fetchLatestBorrows } from "../api/dashboard";
+import dayjs from "dayjs"; // 确保引入 dayjs
 
 const borrowRecords = ref([]);
 
 const loadData = async () => {
   try {
     const { data } = await fetchLatestBorrows();
-    borrowRecords.value = data.map(item => ({
+    borrowRecords.value = data.map((item) => ({
       ...item,
-      time: dayjs(item.timestamp).format('YYYY-MM-DD HH:mm')
+      time: dayjs(item.timestamp).format("YYYY-MM-DD HH:mm"),
     }));
   } catch (error) {
-    ElMessage.error('数据加载失败');
+    ElMessage.error("数据加载失败");
   }
 };
 
@@ -79,5 +79,13 @@ li:hover {
   to {
     opacity: 1;
   }
+}
+.borrow-time {
+  color: var(--info-color);
+  font-size: 12px;
+}
+.return-time {
+  color: var(--warning-color);
+  font-size: 12px;
 }
 </style>

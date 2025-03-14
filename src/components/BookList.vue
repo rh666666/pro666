@@ -4,7 +4,7 @@
     <ul>
       <li v-for="book in sortedBooks.slice(0, 10)" :key="book.id">
         <strong>{{ book.title }}</strong> ({{ book.publishYear }}) by
-        <em>{{ book.author }}</em> - 阅读量:
+        <em>{{ book.author }}</em> - 阅读量: <span class="read-count">{{ book.readCount }}</span> - 出版社: <span class="publisher">{{ book.publisher }}</span>
         <span class="read-count">{{ book.readCount }}</span>
       </li>
     </ul>
@@ -85,6 +85,10 @@ export default {
   color: var(--danger-color);
   font-weight: bold;
   font-size: 24px;
+}
+.publisher {
+  color: var(--info-color);
+  font-size: 12px;
 }
 
 .chart-container {

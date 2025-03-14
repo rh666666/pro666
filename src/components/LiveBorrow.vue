@@ -18,31 +18,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted } from 'vue'
+import { mockRealtimeData } from '../mock/dashboard.js';
 
 const realtimeData = ref([])
-let socket = null
 
-const initWebSocket = () => {
-  socket = new WebSocket('wss://your-websocket-endpoint')
-
-  socket.onmessage = ({ data }) => {
-    const msg = JSON.parse(data)
-    realtimeData.value.unshift({
-      id: Date.now(),
-      time: dayjs().format('HH:mm:ss'),
-      ...msg
-    })
-    
-    // 保持最多20条记录
-    if(realtimeData.value.length > 20) {
-      realtimeData.value.pop()
-    }
-  }
-}
-
-onMounted(initWebSocket)
-onBeforeUnmount(() => socket?.close())
+onMounted(() => {
+  realtimeData.value = mockRealtimeData()
+})
 </script>
 
 <style scoped>

@@ -11,6 +11,7 @@ const booksData = Mock.mock({
       "id|+1": 1,
       "title": "@ctitle(5, 10)",
       "author": "@cname",
+      "publisher": "@cword(3,5)出版社",
       "publishYear|1900-2023": 1,
       "readCount": () => Math.max(Math.floor(Math.random() * totalUsers * 3) - Math.round(0.2 * totalUsers), 0)
     }
