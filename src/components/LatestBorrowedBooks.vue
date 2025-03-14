@@ -1,39 +1,49 @@
 <template>
-  <div>
-    <h2>最新借阅图书</h2>
-    <ul>
-      <li v-for="book in books" :key="book.id">
-        <strong>{{ book.title }}</strong> ({{ book.publishYear }}) by <em>{{ book.author }}</em> - 阅读量: <span class="read-count">{{ book.readCount }}</span>
-      </li>
-    </ul>
+  <div class="grid-item">
+    <h2 class="section-title">📅 最新借阅动态</h2>
+    <el-scrollbar height="380px">
+      <el-timeline>
+        <el-timeline-item
+          v-for="(record, index) in borrowRecords"
+          :key="index"
+          :timestamp="record.time"
+          placement="top"
+        >
+          <el-tag effect="dark" type="success">NEW</el-tag>
+          {{ record.user }} 借阅了《{{ record.book }}》
+        </el-timeline-item>
+      </el-timeline>
+    </el-scrollbar>
   </div>
 </template>
 
-<script>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
+<script setup>
+import { ref } from 'vue';
+import { ElMessage } from 'element-plus';
+import { fetchLatestBorrows } from '../api/dashboard';
+import dayjs from 'dayjs'; // 确保引入 dayjs
 
-export default {
-  name: 'LatestBorrowedBooks',
-  setup() {
-    const books = ref([]);
+const borrowRecords = ref([]);
 
-    onMounted(() => {
-      axios.get('/api/latest-borrowed-books')
-        .then(response => {
-          books.value = response.data;
-        })
-        .catch(error => console.error("获取最新借阅图书数据失败", error));
-    });
-
-    return { books };
+const loadData = async () => {
+  try {
+    const { data } = await fetchLatestBorrows();
+    borrowRecords.value = data.map(item => ({
+      ...item,
+      time: dayjs(item.timestamp).format('YYYY-MM-DD HH:mm')
+    }));
+  } catch (error) {
+    ElMessage.error('数据加载失败');
   }
 };
+
+loadData();
+setInterval(loadData, 30000); // 30秒自动刷新
 </script>
 
 <style scoped>
 .read-count {
-  color: #ff6347;
+  color: var(--danger-color);
   font-weight: bold;
 }
 
@@ -41,6 +51,7 @@ h2 {
   font-size: 1.5em;
   margin-bottom: 0.5em;
   animation: fadeIn 1s ease-in-out;
+  color: var(--primary-color);
 }
 
 ul {
@@ -54,6 +65,7 @@ li {
   padding: 10px;
   border-radius: 4px;
   transition: background 0.3s ease;
+  color: var(--text-dark);
 }
 
 li:hover {

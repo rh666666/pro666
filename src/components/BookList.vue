@@ -3,37 +3,48 @@
     <h2>📚 图书列表</h2>
     <ul>
       <li v-for="book in sortedBooks.slice(0, 10)" :key="book.id">
-        <strong>{{ book.title }}</strong> ({{ book.publishYear }}) by <em>{{ book.author }}</em> - 阅读量: <span class="read-count">{{ book.readCount }}</span>
+        <strong>{{ book.title }}</strong> ({{ book.publishYear }}) by
+        <em>{{ book.author }}</em> - 阅读量:
+        <span class="read-count">{{ book.readCount }}</span>
       </li>
     </ul>
-    <div ref="chart" class="chart-container"></div> <!-- 图表容器 -->
+    <div ref="chart" class="chart-container"></div>
+    <!-- 图表容器 -->
   </div>
 </template>
 
 <script>
-import { ref, onMounted, computed } from 'vue';
-import axios from 'axios';
-import * as echarts from 'echarts'; // 导入 ECharts
-import 'echarts-gl'; // 导入 ECharts GL 扩展
+import { ref, onMounted, computed, nextTick, onBeforeUnmount } from "vue";
+import axios from "axios";
+import * as echarts from "echarts"; // 导入 ECharts
+import "echarts-gl"; // 导入 ECharts GL 扩展
 
 export default {
   setup() {
     const books = ref([]);
     const chartInstance = ref(null); // 用于存储 ECharts 实例
 
+    // 将图表初始化移至数据获取后
     onMounted(() => {
-      axios.get('/api/books') 
-        .then(response => {
-          // 确保数据结构正确
-          if (response.data && response.data.books) {
-            books.value = response.data.books;
-            updateChart(); // 更新图表数据
-          }
-        })
-        .catch(error => console.error("获取图书列表失败", error));
+      axios.get("/api/books").then((response) => {
+        if (response.data?.books) {
+          books.value = response.data.books;
+          // 确保DOM更新后初始化
+          nextTick(() => {
+            chartInstance.value = echarts.init(
+              document.querySelector(".chart-container")
+            );
+            updateChart();
+          });
+        }
+      });
+    });
 
-      // 初始化图表
-      chartInstance.value = echarts.init(document.querySelector('.chart-container'));
+    // 添加组件卸载时的清理
+    onBeforeUnmount(() => {
+      if (chartInstance.value) {
+        chartInstance.value.dispose();
+      }
     });
 
     const sortedBooks = computed(() => {
@@ -41,68 +52,39 @@ export default {
     });
 
     const updateChart = () => {
+      // 改用二维柱状图
       const option = {
-        title: {
-          text: '图书阅读量统计' // 图表标题
+        xAxis: {
+          type: "category",
+          data: books.value.map((book) => book.title.slice(0, 6) + "..."), // 截断长书名
         },
-        tooltip: {},
-        xAxis3D: {
-          type: 'category',
-          data: books.value.map(book => book.title) // 使用书籍名称作为 X 轴数据
-        },
-        yAxis3D: {
-          type: 'category',
-          data: books.value.map(book => book.author) // 使用作者名称作为 Y 轴数据
-        },
-        zAxis3D: {
-          type: 'value'
-        },
-        grid3D: {
-          boxWidth: 200,
-          boxDepth: 80,
-          viewControl: {
-            // 控制视角
-            projection: 'orthographic'
-          },
-          light: {
-            main: {
-              intensity: 1.2
-            },
-            ambient: {
-              intensity: 0.3
-            }
-          }
-        },
-        series: [{
-          type: 'bar3D',
-          data: books.value.map(book => [book.title, book.author, book.readCount]), // 使用书籍名称、作者名称和阅读量作为数据
-          shading: 'lambert',
-          label: {
-            show: false
-          },
-          emphasis: {
-            label: {
-              fontSize: 16,
-              color: '#900'
-            },
+        yAxis: { type: "value" },
+        series: [
+          {
+            type: "bar",
+            data: books.value.map((book) => book.readCount),
             itemStyle: {
-              color: '#900'
-            }
-          }
-        }]
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: "#409EFF" },
+                { offset: 1, color: "#67C23A" },
+              ]),
+            },
+          },
+        ],
       };
       chartInstance.value.setOption(option); // 设置图表选项
     };
 
     return { books, sortedBooks };
-  }
+  },
 };
 </script>
 
 <style scoped>
 .read-count {
-  color: #ff6347;
+  color: var(--danger-color);
   font-weight: bold;
+  font-size: 24px;
 }
 
 .chart-container {
@@ -122,6 +104,8 @@ li {
   padding: 10px;
   border-radius: 4px;
   transition: background 0.3s ease;
+  font-size: 14px;
+  color: var(--success-color);
 }
 
 li:hover {
@@ -129,8 +113,10 @@ li:hover {
 }
 
 h2 {
-  font-size: 1.5em;
+  font-size: 18px;
+  font-weight: bold;
   margin-bottom: 0.5em;
+  color: var(--primary-color);
   animation: fadeIn 1s ease-in-out;
 }
 

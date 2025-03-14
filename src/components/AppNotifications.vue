@@ -11,19 +11,21 @@
   
   <script>
   import { ref, onMounted } from 'vue';
+  import { ElMessage } from 'element-plus'
   import axios from 'axios';
   
   export default {
     setup() {
       const notifications = ref([]);
   
-      onMounted(() => {
-        axios.get('/api/notifications')
-          .then(response => {
-            notifications.value = response.data;
-          })
-          .catch(error => console.error("获取通知失败", error));
-      });
+      onMounted(async () => {
+        try {
+          const { data } = await axios.get('/api/notifications')
+          notifications.value = data.length ? data : [{ message: "暂无新通知" }]
+        } catch (error) {
+          ElMessage.error('通知加载失败')
+        }
+      })
   
       return { notifications };
     }
@@ -32,15 +34,18 @@
 
   <style scoped>
   .grid-item {
-    background: #fff;
+    background: var(--card-bg);
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     animation: fadeIn 1s ease-in-out;
+    color: var(--text-dark);
   }
   
   h2 {
-    font-size: 1.5em;
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--primary-color);
     margin-bottom: 0.5em;
   }
   
@@ -55,6 +60,8 @@
     padding: 10px;
     border-radius: 4px;
     transition: background 0.3s ease;
+    font-size: 14px;
+    color: var(--success-color);
   }
   
   li:hover {

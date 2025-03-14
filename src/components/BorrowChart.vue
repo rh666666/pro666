@@ -5,44 +5,58 @@
   <script>
   import axios from 'axios';  // 导入 axios 库
   import * as echarts from 'echarts';  // 导入 ECharts
-  
+  import { ref, onMounted, onBeforeUnmount } from 'vue';
+
   export default {
     name: 'BorrowChart',
-    data() {
-      return {
-        chartInstance: null  // 用于存储 ECharts 实例
+    setup() {
+      const chartInstance = ref(null);
+      const borrowData = ref([]);
+
+      onMounted(() => {
+        initChart();
+        fetchData();
+      });
+
+      const initChart = () => {
+        chartInstance.value = echarts.init(document.querySelector('.chart-container'));
       };
-    },
-    mounted() {
-      // 请求模拟数据
-      axios.get('path/to/mockData.json')  // 这里的 'path/to/mockData.json' 是模拟数据的文件路径
-        .then(response => {
+
+      const fetchData = async () => {
+        try {
+          const response = await axios.get('/api/borrow-stats');
           const data = response.data;
-          this.updateChart(data);  // 调用方法更新图表数据
-        })
-        .catch(error => {
-          console.error("Error fetching data", error);  // 捕获请求失败的错误
-        });
-    },
-    methods: {
-      updateChart(data) {
-        // 设置图表配置项并更新
+          updateChart(data);
+        } catch (error) {
+          console.error("Error fetching data", error);
+        }
+      };
+
+      const updateChart = (data) => {
         const option = {
           title: {
-            text: '借阅统计'  // 图表标题
+            text: '借阅统计'
           },
           tooltip: {},
           xAxis: {
-            data: data.books  // 假设 data.books 存储了书籍名称
+            data: data.books
           },
           yAxis: {},
           series: [{
-            type: 'bar',  // 使用柱状图
-            data: data.borrowCount  // 假设 data.borrowCount 存储了对应书籍的借阅次数
+            type: 'bar',
+            data: data.borrowCount
           }]
         };
-        this.chartInstance.setOption(option);  // 设置图表选项
-      }
+        chartInstance.value.setOption(option);
+      };
+
+      onBeforeUnmount(() => {
+        if (chartInstance.value) {
+          chartInstance.value.dispose();
+        }
+      });
+
+      return { borrowData };
     }
   };
   </script>
@@ -51,11 +65,12 @@
   .chart-container {
     width: 100%;
     height: 400px;
-    background: #fff;
+    background: var(--card-bg);
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     animation: fadeIn 1s ease-in-out;
+    color: var(--text-dark);
   }
 
   @keyframes fadeIn {

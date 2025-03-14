@@ -54,11 +54,14 @@ export default {
 h1 {
   font-size: 2.5em;
   margin-bottom: 0.5em;
+  color: #409EFF;
 }
 
 h3 {
   margin: 40px 0 0;
   font-weight: bold;
+  font-size: 18px;
+  color: #67C23A;
 }
 
 ul {

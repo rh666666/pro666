@@ -1,0 +1,24 @@
+.dashboard-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  background: #f0f2f5;
+}
+
+.grid-item {
+  background: var(--card-bg, #fff);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  transition: transform 0.3s ease;
+}
+
+.grid-item:hover {
+  transform: translateY(-5px);
+}
+
+.chart-container {
+  height: 400px;
+  margin-top: 15px;
+}

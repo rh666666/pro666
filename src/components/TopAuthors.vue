@@ -32,8 +32,9 @@ export default {
 
 <style scoped>
 .read-count {
-  color: #ff6347;
+  color: var(--danger-color);
   font-weight: bold;
+  font-size: 24px;
 }
 
 ul {
@@ -47,6 +48,8 @@ li {
   padding: 10px;
   border-radius: 4px;
   transition: background 0.3s ease;
+  font-size: 14px;
+  color: var(--success-color);
 }
 
 li:hover {
@@ -54,8 +57,10 @@ li:hover {
 }
 
 h2 {
-  font-size: 1.5em;
+  font-size: 18px;
+  font-weight: bold;
   margin-bottom: 0.5em;
+  color: var(--primary-color);
   animation: fadeIn 1s ease-in-out;
 }
 

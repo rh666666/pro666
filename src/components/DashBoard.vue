@@ -30,20 +30,24 @@ export default {
 
 <style scoped>
 .grid-item {
-  background: #fff;
+  background: var(--card-bg);
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   animation: fadeIn 1s ease-in-out;
+  color: var(--text-dark);
 }
 
 .stat {
-  color: #ff6347;
+  color: var(--danger-color);
   font-weight: bold;
+  font-size: 24px;
 }
 
 h2 {
-  font-size: 1.5em;
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--primary-color);
   margin-bottom: 0.5em;
 }
 

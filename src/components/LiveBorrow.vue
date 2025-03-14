@@ -1,38 +1,61 @@
 <template>
   <div class="grid-item">
-    <h2>📖 实时借阅</h2>
-    <ul>
-      <li v-for="(book, index) in borrowedBooks" :key="index">
-        {{ book }}
-      </li>
-    </ul>
+    <h2 class="section-title">⚡ 实时借阅看板</h2>
+    <div class="real-time-container">
+      <transition-group name="flip-list" tag="ul">
+        <li 
+          v-for="item in realtimeData" 
+          :key="item.id"
+          class="real-time-item"
+        >
+          <span class="time">{{ item.time }}</span>
+          <el-tag size="small">{{ item.type }}</el-tag>
+          <span class="content">{{ item.content }}</span>
+        </li>
+      </transition-group>
+    </div>
   </div>
 </template>
 
-<script>
-import { ref, onMounted } from 'vue';
+<script setup>
+import { ref, onBeforeUnmount } from 'vue'
 
-export default {
-  setup() {
-    const borrowedBooks = ref([]);
+const realtimeData = ref([])
+let socket = null
 
-    onMounted(() => {
-      const socket = new WebSocket("ws://localhost:5000/ws"); // 连接 WebSocket
-      socket.onmessage = (event) => {
-        borrowedBooks.value.push(event.data); // 新增借阅书籍
-      };
-    });
+const initWebSocket = () => {
+  socket = new WebSocket('wss://your-websocket-endpoint')
 
-    return { borrowedBooks };
+  socket.onmessage = ({ data }) => {
+    const msg = JSON.parse(data)
+    realtimeData.value.unshift({
+      id: Date.now(),
+      time: dayjs().format('HH:mm:ss'),
+      ...msg
+    })
+    
+    // 保持最多20条记录
+    if(realtimeData.value.length > 20) {
+      realtimeData.value.pop()
+    }
   }
-};
+}
+
+onMounted(initWebSocket)
+onBeforeUnmount(() => socket?.close())
 </script>
 
 <style scoped>
-.grid-item {
-  background: #fff;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.flip-list-move {
+  transition: transform 0.8s ease;
+}
+.real-time-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  margin: 4px 0;
+  background: rgba(64,158,255,0.05);
+  border-radius: 4px;
+  transition: all 0.3s;
 }
 </style>

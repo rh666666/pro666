@@ -1,10 +1,17 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-import router from './router'; // 引入 Vue Router
-import './mock/mock'; // 引入 mock 数据
+import router from './router';
+import store from './store';
+import ElementPlus from 'element-plus';
+import 'element-plus/dist/index.css';
+import './assets/styles/variables.css';
+import './assets/styles/dashboard.css';
+import './assets/mock/mock.js'; // 确保引入了 Mock 数据
 
 const app = createApp(App);
 
-app.use(router); // 启用 Vue Router
+app.use(router);
+app.use(store);
+app.use(ElementPlus);
 
 app.mount('#app');

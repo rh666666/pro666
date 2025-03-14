@@ -1,52 +1,58 @@
 <template>
-    <div class="grid-item">
-      <h2>🏛 图书馆概况</h2>
-      <p>📚 馆藏书籍总数: {{ stats.totalBooks }}</p>
-      <p>📖 总借阅量: {{ stats.totalBorrows }}</p>
+  <div class="grid-item combined-stats">
+    <div class="stat-block">
+      <h3>馆藏总量</h3>
+      <animated-number :value="stats.totalBooks" />
+      <span class="compare">环比↑12%</span>
     </div>
-  </template>
-  
-  <script>
-  import { ref, onMounted } from 'vue';
-  import axios from 'axios';
-  
-  export default {
-    setup() {
-      const stats = ref({ totalBooks: 0, totalBorrows: 0 });
-  
-      onMounted(() => {
-        axios.get('/api/library-summary')
-          .then(response => {
-            stats.value = response.data;
-          })
-          .catch(error => console.error("获取图书馆数据失败", error));
-      });
-  
-      return { stats };
-    }
-  };
-  </script>
+    
+    <div class="chart-wrapper">
+      <echarts :option="usageChart" />
+    </div>
+  </div>
+</template>
 
-  <style scoped>
-  .grid-item {
-    background: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 1s ease-in-out;
-  }
-  
-  h2 {
-    font-size: 1.5em;
-    margin-bottom: 0.5em;
-  }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
+<script setup>
+import { ref } from 'vue';
+import { useLibraryStats } from '../composables/useDashboard';
+import animatedNumber from 'vue-animated-number'; // 确保引入 animatedNumber
+
+const { stats } = useLibraryStats();
+
+const usageChart = ref({
+  tooltip: { trigger: 'item' },
+  series: [{
+    type: 'pie',
+    radius: ['60%', '80%'],
+    data: [
+      { value: 75, name: '在库书籍' },
+      { value: 25, name: '借出书籍' }
+    ],
+    itemStyle: {
+      borderRadius: 5,
+      borderColor: '#fff',
+      borderWidth: 2
     }
-    to {
-      opacity: 1;
-    }
+  }]
+});
+</script>
+
+<style scoped>
+.combined-stats {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: center;
+}
+
+.stat-block {
+  text-align: center;
+  h3 {
+    color: var(--el-text-color-secondary);
+    margin-bottom: 8px;
   }
-  </style>
+}
+
+.chart-wrapper {
+  height: 180px;
+}
+</style>
