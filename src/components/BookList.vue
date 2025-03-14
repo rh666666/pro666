@@ -3,9 +3,16 @@
     <h2>📚 图书列表</h2>
     <ul>
       <li v-for="book in sortedBooks.slice(0, 10)" :key="book.id">
-        <strong>{{ book.title }}</strong> ({{ book.publishYear }}) by
-        <em>{{ book.author }}</em> - 阅读量: <span class="read-count">{{ book.readCount }}</span> - 出版社: <span class="publisher">{{ book.publisher }}</span>
-        <span class="read-count">{{ book.readCount }}</span>
+        <div class="book-info">
+          <strong>{{ book.title }}</strong> ({{ book.publishYear }})
+          <div class="author-info">
+            by <em>{{ book.author }}</em>
+          </div>
+          <span class="publisher">{{ book.publisher }}</span>
+        </div>
+        <div class="read-count-container">
+          <span class="read-count">{{ book.readCount }}</span>
+        </div>
       </li>
     </ul>
     <div ref="chart" class="chart-container"></div>
@@ -99,9 +106,51 @@ export default {
 
 ul {
   list-style-type: none;
-  padding: 0;
+  padding: 0 0 0 10px;
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
+.grid-item {
+  max-width: 100%;
+  margin-right: 0;
+}
+.book-info {
+  flex: 1;
+  padding-right: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.author-info {
+  color: #666;
+  font-size: 13px;
+}
+
+.publisher {
+  color: var(--info-color);
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.read-count-container {
+  min-width: 100px;
+  text-align: right;
+  border-left: 1px solid #eee;
+  padding-left: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 li {
   background: #f9f9f9;
   margin: 5px 0;

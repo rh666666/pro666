@@ -13,6 +13,7 @@ export const usePopularBooks = () => {
       }));
     } catch (error) {
       console.error('获取热门书籍数据失败', error);
+      chartData.value = []; // 失败时重置为空数组
     }
   });
 

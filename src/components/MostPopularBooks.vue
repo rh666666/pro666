@@ -19,26 +19,53 @@ import { onMounted, onBeforeUnmount, nextTick } from 'vue';
 const { chartData } = usePopularBooks();
 
 const chartOption = ref({
-  dataset: { source: chartData },
+  dataset: { 
+    source: chartData.value.sort((a, b) => b.count - a.count).slice(0, 10),
+  },
   tooltip: {
     trigger: 'axis',
-    formatter: '{b0}<br/>借阅量: {c0} 次'
+    formatter: '{b0}<br/>借阅量: {c0} 次',
+    backgroundColor: 'rgba(245,245,245,0.98)',
+    borderWidth: 0,
+    textStyle: {
+      color: '#2c3e50'
+    }
   },
-  xAxis: { type: 'value' },
+  xAxis: {
+    type: 'value',
+    splitLine: { show: false },
+    axisLabel: { color: '#95a5a6' }
+  },
   yAxis: {
     type: 'category',
     axisLabel: {
-      formatter: value => value.substring(0, 6) + '...'
-    }
+      color: '#2c3e50',
+      fontSize: 12,
+      formatter: (value) => value.length > 10 ? value.slice(0,8)+'...' : value
+    },
+    axisLine: { show: false },
+    axisTick: { show: false }
+  },
+  grid: {
+    left: '12%',
+    right: '5%',
+    containLabel: true
   },
   series: [{
     type: 'bar',
-    encode: { x: 'count', y: 'title' },
+    barWidth: 14,
     itemStyle: {
-      color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-        { offset: 0, color: '#409EFF' },
-        { offset: 1, color: '#67C23A' }
-      ])
+      color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [
+        { offset: 0, color: '#3498db' },
+        { offset: 1, color: '#2980b9' }
+      ]),
+      borderRadius: [0, 7, 7, 0]
+    },
+    label: {
+      show: true,
+      position: 'right',
+      color: '#3498db',
+      fontWeight: 'bold'
     }
   }]
 });
