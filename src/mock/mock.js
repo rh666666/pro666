@@ -1,4 +1,3 @@
-// src/mock/mock.js
 import Mock from 'mockjs';
 
 // 模拟总用户数
@@ -13,7 +12,7 @@ const booksData = Mock.mock({
       "author": "@cname",
       "publisher": "@cword(3,5)出版社",
       "publishYear|1900-2023": 1,
-      "readCount": () => Math.max(Math.floor(Math.random() * totalUsers * 3) - Math.round(0.2 * totalUsers), 0)
+      "readCount": () => Math.floor(Math.random() * totalUsers * 3) + 1
     }
   ]
 }).books;
@@ -42,7 +41,7 @@ Mock.mock('/api/popular-books', 'get', () => {
   const popularBooks = booksData
     .sort((a, b) => b.readCount - a.readCount)
     .slice(0, 10); // 返回10个结果
-  return popularBooks;
+  return { books: popularBooks };
 });
 
 // 模拟热门作者接口
@@ -56,8 +55,8 @@ Mock.mock('/api/top-authors', 'get', () => {
   });
   const topAuthors = Object.values(authorMap)
     .sort((a, b) => b.totalReadCount - a.totalReadCount)
-    .slice(0, 10); // 返回10个结果
-  return topAuthors;
+    .slice(0, 20); // 返回20个结果
+  return { authors: topAuthors };
 });
 
 // 模拟最新借阅图书接口
@@ -65,15 +64,22 @@ Mock.mock('/api/latest-borrowed-books', 'get', () => {
   const latestBorrowedBooks = booksData
     .sort(() => Math.random() - 0.5)
     .slice(0, 10);
-  return latestBorrowedBooks;
+  return { books: latestBorrowedBooks };
 });
 
 // 模拟实时借阅信息接口
 Mock.mock('/api/live-borrow', 'get', () => {
-  const latestBorrowedBooks = booksData
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 10);
-  return latestBorrowedBooks;
+  let transactionId = 0;
+  const now = new Date();
+  
+  return {
+    data: booksData.slice(0, 10).map(book => ({
+      id: transactionId++,
+      timestamp: Date.now() - 86400000 + Math.floor(Math.random() * 86400000),
+      type: Mock.mock('@pick(["借阅", "归还"])'),
+      content: Mock.mock(`@cname`) + Mock.mock(`@pick(["借阅了", "归还了"])`) + `《${book.title}》`
+    }))
+  };
 });
 
 // 模拟图书馆概要接口
@@ -85,13 +91,13 @@ Mock.mock('/api/library-summary', 'get', () => ({
 }));
 
 // 模拟用户统计接口
-Mock.mock('/api/user-statistics', 'get', () => ({
-  genderRatio: {
-    male: Mock.mock('@natural(40, 60)'),
-    female: Mock.mock('@natural(40, 60)')
-  },
-  ageDistribution: Array.from({length: 6}, (_, i) => ({
-    ageRange: `${i*10}-${(i+1)*10}岁`,
-    count: Mock.mock('@natural(100, 1000)')
-  }))
-}));
+Mock.mock('/api/user-statistics', 'get', () => {
+  const users = Array.from({length: 30}, (_, i) => ({
+    id: i + 1,
+    name: Mock.mock('@cname'),
+    borrowCount: Mock.mock('@natural(50, 200)'),
+    lastBorrow: new Date(Date.now() - Math.floor(Math.random() * 604800000)).toISOString(), // 最近7天内的随机时间
+    memberLevel: Mock.mock('@pick(["普通", "VIP", "黄金"])')
+  })).sort((a, b) => b.borrowCount - a.borrowCount);
+  return { users };
+});
