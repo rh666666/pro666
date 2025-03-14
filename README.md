@@ -44,8 +44,8 @@
 ### （二）步骤
 1. **克隆项目到本地**：
 ```bash
-git clone https://github.com/rh666666/pro666
-cd pro666
+git clone http://47.113.231.74:3000/large_screen/large_screen_11
+cd large_screen_11
 ```
 2. **安装依赖**：
 ```bash
