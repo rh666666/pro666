@@ -74,3 +74,23 @@ Mock.mock('/api/live-borrow', 'get', () => {
     .slice(0, 10);
   return latestBorrowedBooks;
 });
+
+// 模拟图书馆概要接口
+Mock.mock('/api/library-summary', 'get', () => ({
+  totalBooks: booksData.length,
+  totalUsers,
+  monthlyGrowth: Mock.mock('@float(0.5, 15, 1, 2)'),
+  activeUsers: Mock.mock('@natural(500, 2000)')
+}));
+
+// 模拟用户统计接口
+Mock.mock('/api/user-statistics', 'get', () => ({
+  genderRatio: {
+    male: Mock.mock('@natural(40, 60)'),
+    female: Mock.mock('@natural(40, 60)')
+  },
+  ageDistribution: Array.from({length: 6}, (_, i) => ({
+    ageRange: `${i*10}-${(i+1)*10}岁`,
+    count: Mock.mock('@natural(100, 1000)')
+  }))
+}));

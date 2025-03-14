@@ -43,14 +43,15 @@ const chartOption = ref({
   }]
 });
 const chartInstance = ref(null);
+const chartContainer = ref(null);
 
 onMounted(() => {
   nextTick(() => {
-    const chartContainer = ref(null);
     chartInstance.value = echarts.init(chartContainer.value);
     chartInstance.value.setOption(chartOption.value);
   });
 });
+
 
 onBeforeUnmount(() => {
   if(chartInstance.value) {
@@ -58,8 +59,6 @@ onBeforeUnmount(() => {
   }
 });
 </script>
-
-<style scoped>
 .read-count {
   color: var(--danger-color);
   font-weight: bold;

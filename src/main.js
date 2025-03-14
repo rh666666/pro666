@@ -6,7 +6,7 @@ import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css';
 import './assets/styles/variables.css';
 import './assets/styles/dashboard.css';
-import './assets/mock/mock.js'; // 确保引入了 Mock 数据
+import '@/mock/mock.js'; // 统一Mock数据源
 
 const app = createApp(App);
 
