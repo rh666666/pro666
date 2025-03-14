@@ -23,13 +23,6 @@
 ├── public
 │   ├── favicon.ico
 │   └── index.html
-├── server
-│   ├── README.md
-│   ├── package-lock.json
-│   ├── package.json
-│   └── server.js
-├── docs
-│   └── README_zh-CN.md
 ├── .gitignore
 ├── LICENSE
 ├── README.md
@@ -42,7 +35,6 @@
 - `src/components`：存放项目的各个组件，每个组件负责不同的功能模块。
 - `src/mock`：包含模拟数据的文件，用于开发和测试阶段。
 - `public`：存放公共资源，如网站图标和入口 HTML 文件。
-- `server`：目前该目录保留作为未来添加后端功能的参考，暂不用于开发。
 - `docs`：包含项目的中文文档。
 
 ## 三、安装与运行
