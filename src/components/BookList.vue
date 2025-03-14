@@ -29,19 +29,42 @@ import "echarts-gl"; // 导入 ECharts GL 扩展
 export default {
   setup() {
     const books = ref([]);
+    const chart = ref(null); // 图表容器引用
     const chartInstance = ref(null); // 用于存储 ECharts 实例
 
     // 将图表初始化移至数据获取后
     onMounted(() => {
       axios.get("/api/books").then((response) => {
         if (response.data?.books) {
-          books.value = response.data.books;
+          books.value = (response.data.books || []).map((item) => ({
+            ...item,
+            readCount: item.readCount || 0,
+          }));
           // 确保DOM更新后初始化
           nextTick(() => {
-            chartInstance.value = echarts.init(
-              document.querySelector(".chart-container")
-            );
-            updateChart();
+            if (chart.value) {
+              try {
+                chartInstance.value = echarts.init(chart.value);
+                updateChart();
+              } catch (e) {
+                console.error("图表初始化失败:", e);
+              }
+            } else {
+              console.error("图表容器元素未找到");
+              // 添加重试机制或其他处理逻辑
+              setTimeout(() => {
+                if (chart.value) {
+                  try {
+                    chartInstance.value = echarts.init(chart.value);
+                    updateChart();
+                  } catch (e) {
+                    console.error("重试图表初始化失败:", e);
+                  }
+                } else {
+                  console.error("重试后图表容器元素仍未找到");
+                }
+              }, 1000); // 延迟1秒后重试
+            }
           });
         }
       });
@@ -106,11 +129,10 @@ export default {
 
 ul {
   list-style-type: none;
-  padding: 0 0 0 10px;
+  padding: 0;
   width: 100%;
   box-sizing: border-box;
-  max-width: 800px;
-  margin: 0 auto;
+  margin: 0;
 }
 
 .grid-item {
@@ -152,13 +174,14 @@ li {
   align-items: center;
 }
 li {
-  background: #f9f9f9;
-  margin: 5px 0;
-  padding: 10px;
-  border-radius: 4px;
-  transition: background 0.3s ease;
+  background: #fff;
+  margin: 8px 0;
+  padding: 12px 15px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
   font-size: 14px;
   color: var(--success-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 li:hover {

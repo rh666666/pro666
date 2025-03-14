@@ -2,8 +2,12 @@
   <div>
     <h2>🏆 最受欢迎作者</h2>
     <ul>
-      <li v-for="(author, index) in authors.slice(0, 10)" :key="index">
-        <strong>{{ index + 1 }}. {{ author.name }}</strong> - 借阅 <span class="read-count">{{ author.totalReadCount }}</span> 次
+      <li v-for="(author, index) in authors.slice(0, 20)" :key="index">
+        <strong>{{ index + 1 }}. {{ author.name }}</strong>
+        <span class="meta">
+          × 
+          <span class="count">{{ author.totalReadCount }}</span>
+        </span>
       </li>
     </ul>
   </div>
@@ -20,8 +24,8 @@ export default {
     onMounted(() => {
       axios.get('/api/top-authors')
         .then(response => {
-          if(Array.isArray(response.data)) {
-          authors.value = response.data;
+          if(Array.isArray(response.data.authors)) {
+          authors.value = response.data.authors;
         } else {
           console.error('接口返回数据格式错误：', response.data);
           authors.value = [];

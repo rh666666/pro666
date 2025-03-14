@@ -16,7 +16,7 @@ export default {
     const stats = ref({ totalBooks: 0, totalUsers: 0, todayBorrows: 0 });
 
     onMounted(() => {
-      axios.get('/api/dashboard')
+      axios.get('/mock/dashboard')
         .then(response => {
           stats.value = response.data;
         })

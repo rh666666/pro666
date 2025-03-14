@@ -19,12 +19,23 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { mockRealtimeData } from '../mock/dashboard.js';
+import axios from 'axios';
+import dayjs from 'dayjs'
 
 const realtimeData = ref([])
 
 onMounted(() => {
-  realtimeData.value = mockRealtimeData()
+  axios.get('/api/live-borrow')
+    .then(response => {
+      realtimeData.value = (response.data?.data || [])
+        .map(item => ({
+          ...item,
+          timestamp: item.timestamp,
+          time: dayjs(item.timestamp).format('YYYY-MM-DD HH:mm')
+        }))
+        .sort((a, b) => b.timestamp - a.timestamp);
+    })
+    .catch(error => console.error('获取实时数据失败', error));
 })
 </script>
 
@@ -32,13 +43,29 @@ onMounted(() => {
 .flip-list-move {
   transition: transform 0.8s ease;
 }
+.real-time-container {
+  max-width: 100%;
+  overflow: hidden;
+}
+
 .real-time-item {
   display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   align-items: center;
-  padding: 8px 12px;
-  margin: 4px 0;
+  padding: 12px 16px;
+  margin: 6px 0;
   background: rgba(64,158,255,0.05);
-  border-radius: 4px;
-  transition: all 0.3s;
+  border-radius: 6px;
+  min-width: 320px;
+}
+
+.real-time-item .time {
+  min-width: 90px;
+}
+
+.real-time-item .content {
+  flex: 1;
+  min-width: 200px;
 }
 </style>

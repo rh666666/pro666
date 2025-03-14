@@ -19,7 +19,7 @@
       });
 
       const initChart = () => {
-        chartInstance.value = echarts.init(document.querySelector('.chart-container'));
+        chartInstance.value = echarts.init(chartContainer.value);
       };
 
       const fetchData = async () => {

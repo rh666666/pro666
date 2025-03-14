@@ -1,88 +1,88 @@
 <template>
   <div class="grid-item">
     <h2 class="section-title">📚 图书借阅排行</h2>
-    <div class="chart-container" ref="chartContainer">
-      <echarts 
-        :option="chartOption" 
-        autoresize
-      />
-    </div>
+    <ul class="list-container">
+      <div ref="chart" class="chart-container"></div>
+      <li
+        v-for="(book, index) in books"
+        :key="book.title"
+        class="book-item"
+      >
+        <strong>{{ index + 1 }}. {{ book.title }}</strong> 
+        <span class="meta">
+          ({{ book.publishYear }}) × 
+          <span class="count">{{ book.readCount }}</span>
+        </span>
+      </li>
+    </ul>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { usePopularBooks } from '../composables/useDashboard';
-import * as echarts from 'echarts'; // 确保引入 echarts
-import { onMounted, onBeforeUnmount, nextTick } from 'vue';
+import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import axios from 'axios';
+import * as echarts from 'echarts';
 
-const { chartData } = usePopularBooks();
+const books = ref([]);
+const chart = ref(null);
+const chartInstance = ref(null);
 
-const chartOption = ref({
-  dataset: { 
-    source: chartData.value.sort((a, b) => b.count - a.count).slice(0, 10),
+onMounted(() => {
+  axios.get('/api/popular-books')
+    .then(response => {
+      console.log('请求返回的数据:', response.data);
+      books.value = response.data?.books || [];
+    })
+    .catch(error => console.error("获取热门书籍数据失败", error))
+      .finally(() => {
+        nextTick(() => {
+          if (chart.value) {
+            chartInstance.value = echarts.init(chart.value);
+            const option = {
+  title: {
+    text: '📊 图书借阅排行',
+    left: 'center'
   },
-  tooltip: {
-    trigger: 'axis',
-    formatter: '{b0}<br/>借阅量: {c0} 次',
-    backgroundColor: 'rgba(245,245,245,0.98)',
-    borderWidth: 0,
-    textStyle: {
-      color: '#2c3e50'
+  tooltip: {},
+  xAxis: {
+    type: 'category',
+    data: books.value.map(b => b.title),
+    axisLabel: {
+      rotate: 45
     }
   },
-  xAxis: {
-    type: 'value',
-    splitLine: { show: false },
-    axisLabel: { color: '#95a5a6' }
-  },
   yAxis: {
-    type: 'category',
-    axisLabel: {
-      color: '#2c3e50',
-      fontSize: 12,
-      formatter: (value) => value.length > 10 ? value.slice(0,8)+'...' : value
-    },
-    axisLine: { show: false },
-    axisTick: { show: false }
-  },
-  grid: {
-    left: '12%',
-    right: '5%',
-    containLabel: true
+    type: 'value'
   },
   series: [{
     type: 'bar',
-    barWidth: 14,
+    data: books.value.map(b => b.readCount),
     itemStyle: {
-      color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [
-        { offset: 0, color: '#3498db' },
-        { offset: 1, color: '#2980b9' }
-      ]),
-      borderRadius: [0, 7, 7, 0]
-    },
-    label: {
-      show: true,
-      position: 'right',
-      color: '#3498db',
-      fontWeight: 'bold'
+      color: '#1890ff'
     }
   }]
-});
-const chartInstance = ref(null);
-const chartContainer = ref(null);
+};
+            console.log('ECharts配置:', option);
+            chartInstance.value.setOption(option);
+          }
+        });
 
-onMounted(() => {
-  nextTick(() => {
-    chartInstance.value = echarts.init(chartContainer.value, null, {
-      renderer: 'canvas'
-    });
-    chartInstance.value.setOption(chartOption.value);
-  });
+onBeforeUnmount(() => {
+  if (chartInstance.value) {
+    chartInstance.value.dispose();
+  }
+});
+      });
+
+onBeforeUnmount(() => {
+  if (chartInstance.value) {
+    chartInstance.value.dispose();
+  }
+});
 });
 
 onBeforeUnmount(() => {
-  if(chartInstance.value) {
+  if (chartInstance.value) {
     chartInstance.value.dispose();
   }
 });
@@ -129,5 +129,76 @@ h2 {
   to {
     opacity: 1;
   }
+}
+
+.chart-container {
+  height: 300px;
+  margin-top: 20px;
+  border-radius: 8px;
+  background: var(--card-bg);
+  padding: 15px;
+}
+
+.list-container {
+  margin-bottom: 20px;
+  min-height: 400px;
+  overflow-y: auto;
+}
+
+.book-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  padding: 12px;
+  background: var(--card-bg);
+  border-radius: 8px;
+  transition: transform 0.2s;
+}
+
+.ranking-badge {
+  background: var(--primary-color);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+  font-weight: 600;
+}
+
+.book-info {
+  flex: 1;
+}
+
+.title {
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.author {
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+.count {
+  font-size: 12px;
+  background: var(--primary-light);
+  color: var(--primary-color);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.read-count {
+  color: var(--danger-color);
+  font-weight: bold;
 }
 </style>

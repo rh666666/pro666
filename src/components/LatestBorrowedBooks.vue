@@ -20,14 +20,14 @@
 <script setup>
 import { ref } from "vue";
 import { ElMessage } from "element-plus";
-import { fetchLatestBorrows } from "../api/dashboard";
+import { fetchLatestBorrows } from "@/mock/mock";
 import dayjs from "dayjs"; // 确保引入 dayjs
 
 const borrowRecords = ref([]);
 
 const loadData = async () => {
   try {
-    const { data } = await fetchLatestBorrows();
+    const { data } = await axios.get('/mock/latest-borrows');
     borrowRecords.value = data.map((item) => ({
       ...item,
       time: dayjs(item.timestamp).format("YYYY-MM-DD HH:mm"),
