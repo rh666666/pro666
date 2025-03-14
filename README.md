@@ -1,7 +1,3 @@
-<div align="center">
-  <a href="../README.md">en</a> | 中文
-</div>
-
 # 图书管理系统项目文档
 
 ## 一、项目概述
