@@ -18,6 +18,12 @@
 <script setup>
 import { provide, ref } from 'vue';
 import { useAutoRefresh } from '../composables/useDashboard';
+import LibrarySummary from '@/components/LibrarySummary.vue';
+import MostPopularBooks from '@/components/MostPopularBooks.vue';
+import LatestBorrowedBooks from '@/components/LatestBorrowedBooks.vue';
+import TopAuthors from '@/components/TopAuthors.vue';
+import UserStatistics from '@/components/UserStatistics.vue';
+import LiveBorrow from '@/components/LiveBorrow.vue';
 
 const refreshFlag = ref(false);
 provide('dashboardRefresh', refreshFlag);

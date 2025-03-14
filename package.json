@@ -17,11 +17,13 @@
     "vue": "^3.2.13",
     "vue-demi": "^0.14.10",
     "vue-router": "^4.0.13",
+    "vue3-number-animation": "^2.0.0",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
+    "@babel/plugin-proposal-export-default-from": "^7.25.9",
     "@types/mockjs": "^1.0.10",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",

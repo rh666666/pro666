@@ -2,7 +2,7 @@
   <div class="grid-item combined-stats">
     <div class="stat-block">
       <h3>馆藏总量</h3>
-      <animated-number :value="stats.totalBooks" />
+      <number-animation :value="stats.totalBooks" />
       <span class="compare">环比↑12%</span>
     </div>
     
@@ -15,7 +15,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useLibraryStats } from '../composables/useDashboard';
-import animatedNumber from 'vue-animated-number'; // 确保引入 animatedNumber
+import NumberAnimation from 'vue3-number-animation';
 
 const { stats } = useLibraryStats();
 
@@ -56,3 +56,4 @@ const usageChart = ref({
   height: 180px;
 }
 </style>
+import NumberAnimation from 'vue3-number-animation';

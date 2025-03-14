@@ -5,6 +5,7 @@
       :option="chartOption" 
       autoresize 
       class="chart-container"
+      ref="chartContainer"
     />
   </div>
 </template>
@@ -13,6 +14,7 @@
 import { ref } from 'vue';
 import { usePopularBooks } from '../composables/useDashboard';
 import * as echarts from 'echarts'; // 确保引入 echarts
+import { onMounted, onBeforeUnmount, nextTick } from 'vue';
 
 const { chartData } = usePopularBooks();
 
@@ -39,6 +41,21 @@ const chartOption = ref({
       ])
     }
   }]
+});
+const chartInstance = ref(null);
+
+onMounted(() => {
+  nextTick(() => {
+    const chartContainer = ref(null);
+    chartInstance.value = echarts.init(chartContainer.value);
+    chartInstance.value.setOption(chartOption.value);
+  });
+});
+
+onBeforeUnmount(() => {
+  if(chartInstance.value) {
+    chartInstance.value.dispose();
+  }
 });
 </script>
 

@@ -20,7 +20,12 @@ export default {
     onMounted(() => {
       axios.get('/api/top-authors')
         .then(response => {
+          if(Array.isArray(response.data)) {
           authors.value = response.data;
+        } else {
+          console.error('接口返回数据格式错误：', response.data);
+          authors.value = [];
+        }
         })
         .catch(error => console.error("获取热门作者数据失败", error));
     });
